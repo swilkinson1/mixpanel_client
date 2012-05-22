@@ -17,7 +17,9 @@ module Mixpanel
 
     # Available options for a Mixpanel API request
     OPTIONS = [:resource, :event, :funnel_id, :name, :type, :unit, :interval, :limit, :format, :bucket,
-               :values, :from_date, :to_date, :on, :where, :buckets, :timezone]
+               #:values, :from_date, :to_date, :on, :where, :buckets, :timezone]
+               :values, :from_date, :to_date, :on, :where, :buckets, :timezone, :retention_type, :born_event, 
+               :born_where, :interval_count, :length]
 
     # Dynamically define accessor methods for each option
     OPTIONS.each do |option|
@@ -92,6 +94,7 @@ module Mixpanel
     # @return [Hash] collection of options including defaults and generated signature
     def normalize_params(params)
       params.merge!(
+        #:test => 1,  # Added in to debug properties["id"] failing on retention API call
         :api_key => @api_key,
         :expire  => Time.now.to_i + 600 # Grant this request 10 minutes
       ).merge!(:sig => Utils.generate_signature(params, @api_secret))
